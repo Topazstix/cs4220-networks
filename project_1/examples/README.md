@@ -12,7 +12,7 @@ For detailed information on openssl & client/server communications, please refer
    1. for ubuntu:
       1. `sudo apt install -y openssl libssl-dev build-essential`
 2. Generate an openssl certificate (note: article requires `1024` bit key, this has been adjusted to `2048` for modern standard. `4096` bit would be best, but hey its an example)
-   1. `openssl req -x509 -nodes -days 365 -newkey rsa:1024 -keyout mycert.pem -out mycert.pem`
+   1. `openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout mycert.pem -out mycert.pem`
    2. Mash enter through all requests for information on the certificate owner; this information is not required for an example
 3. Compile each program into a binary
    1. `gcc -Wall -o client  example_client.c -L/usr/lib -lssl -lcrypto`
