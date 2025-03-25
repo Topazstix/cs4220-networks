@@ -8,8 +8,7 @@ after validating certificates with the given server. */
 #include <malloc.h>
 #include <string.h>
 
-// Global constant definitions
-#define FAIL -1
+
 
 
 /* Main function to simulate the client sending a request to a server.
@@ -29,6 +28,13 @@ int main(int argc, char *argv[]){
         exit(0);
     }
 
+    // Find target
+
+
+    // Try to connect
+
+    
+
     // Inside the loop if the SSL_connect is true
     // Declare the spots for the password and username
     char username[16] = {0};
@@ -41,4 +47,8 @@ int main(int argc, char *argv[]){
     printf("Please enter your username: \n");
 
 }
+
+
+// Other functions as needed
+
 
