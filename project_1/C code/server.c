@@ -22,19 +22,31 @@ Returns: idk yet nothing important probably just an exit code.
 */
 int main(int argc, char * argv[]){
 
-    // Definitions
+    /* Definitions */
 
 
-    // Error checking
+    /* Error checking */ 
+    // Check if user is root ( only matters if port is <1000)
+    // Check if called with the right number of arguments
 
 
-    // Listening
+    /* Start SSL/Socket stuff*/
 
-    // Recieving 
 
-    // Validating
+    /* Listening */
+    // Infinite listening loop 
 
-    // Transfer
+        /* Recieving */
+
+
+        /* Validating */
+
+
+        /* Transfer Message to User*/
+
+
+    /* End */
+    // Close socket and connections
 
 
 }
