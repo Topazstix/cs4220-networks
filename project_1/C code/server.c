@@ -28,7 +28,9 @@ int main(int argc, char * argv[]){
     // Error checking
 
 
-    // Monitoring
+    // Listening
+
+    // Recieving 
 
     // Validating
 
