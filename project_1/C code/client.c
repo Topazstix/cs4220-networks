@@ -9,7 +9,8 @@ after validating certificates with the given server. */
 #include <string.h>
 
 
-
+// Define
+#define MAX_STRING_LENGTH 80
 
 /* Main function to simulate the client sending a request to a server.
 Arguments: Gets the number of arguments as the first argument and the rest of the arguments as an array of strings.
@@ -19,7 +20,7 @@ int main(int argc, char *argv[]){
     
     
     // Initialize variables
-    char buff[1024];
+    char message[1024];
 
 
     // Check to see if the program was called with the right number of arguments.
@@ -47,24 +48,39 @@ int main(int argc, char *argv[]){
         // Print prompts after validation
         // User needs their password and username
         printf("Please enter your username: \n");
-        // scanf and validate username 
+        fgetsTrim(username, MAX_STRING_LENGTH, stdin);
         printf("Please enter your password: \n");
-        // scanf and validate password
-
+        fgetsTrim(password, MAX_STRING_LENGTH, stdin);
 
         // Send the user's credentials along with their request to the server
 
 
         // Recieve the message
-        // Decode message and display it
-
+        printf("Recieved a message: \"%s\"\n", message);
 
 
     // Close the connection
+
+    return 0;
 
 }
 
 
 // Other functions as needed
+/*
+* An extension of fgets. Ensures the last character in the array after it calls fgets is '\0' not '\n'.
+* Parameters: The same as fgets. The address to read the string entered into, the max length of the string,
+* and the file stream to read in from.
+* Return: None
+*/
+void fgetsTrim(char* string, int length, FILE* stream) {
 
+	//use fgets
+	fgets(string, length, stdin);
+
+	//make sure the terminating character is the null character and not the newline character
+	if (string[strlen(string) - 1] == '\n') {
+		string[strlen(string) - 1] = '\0';
+	}
+}
 
