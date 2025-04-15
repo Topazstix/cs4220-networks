@@ -7,10 +7,42 @@ after validating certificates with the given server. */
 #include <errno.h>
 #include <malloc.h>
 #include <string.h>
-
+#include <unistd.h>
+#include <sys/socket.h>
+#include <resolv.h>
+#include <netdb.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 
 // Define
 #define MAX_STRING_LENGTH 80
+
+
+
+/* Function to open the connection for the client.
+Arguments: the hostname passed as a constant string and the port number as an integer
+Returns: 
+*/
+int OpenConnection(const char *hostname, int port){
+
+    // Definitions
+
+
+    // Get the hostname
+    host = gethostbyname(hostname);
+
+    // Verify
+    if (host != NULL){
+
+    }
+
+
+    // Else if the 
+    else{
+
+    }
+}
+
 
 /* Main function to simulate the client sending a request to a server.
 Arguments: Gets the number of arguments as the first argument and the rest of the arguments as an array of strings.
