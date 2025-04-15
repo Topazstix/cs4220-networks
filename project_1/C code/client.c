@@ -25,20 +25,39 @@ Returns:
 */
 int OpenConnection(const char *hostname, int port){
 
-    // Definitions
-
-
-    // Get the hostname
+    // Get and verify the hostname
+    struct hostent *host;
     host = gethostbyname(hostname);
-
-    // Verify
-    if (host != NULL){
-
+    if (host == NULL){
+        perror("ERROR: HOSTNAME IS INVALID");
+        abort();
     }
 
+    // Create the socket
+    int socketID = socket(AF_INET, SOCK_STREAM, 0);
 
-    // Else if the 
-    else{
+    // Check socket status
+    if (socketID == -1){
+        perror("ERROR: SOCKET WAS NOT CREATED");
+        abort();
+    }
+
+    // Prepare for connection
+    struct sockaddr_in addr;
+    bzero(&addr, sizeof(addr));
+    addr.sin_family = PF_INET;
+    addr.sin_port = htons(port);
+    addr.sin_addr.s_addr = *(long*)(host->h_addr);
+    
+
+    // Connect!
+
+
+    // Check connection
+
+
+
+
 
     }
 }
