@@ -134,21 +134,33 @@ int main(int argc, char *argv[]){
         exit(0);
     }
 
-    // Create socket/SSL connection thing
+    // Setup for SSL 
+    char *hostname = argv[1];
+    int portnumber = argv[2];
+    SSL_library_init();
 
 
-    // Validate certificate with SSL
+    // Create connection
+    SSL_CTX *ctx = setupCTX();
+    int server = OpenConnection(hostname, portnumber);
+    SSL *ssl = SSL_new(ctx);
+    SSL_set_fd(ssl, server);
 
 
-    // Try to connect
+    // Validate SSL conection 
+    if ( SSL_connect(ssl) == FAIL ) {  
+        ERR_print_errors_fp(stderr);
+    }
 
-    //if SSL validation failed 
-        // then exit
-    //else 
+    else{ 
+
         // Declare the spots for the password and username
         char username[16] = {0};
         char password[16] = {0};
-
+        char buffFromServer[1024] = {0};
+        char buffToServer[1024] = {0};
+        const char *cpRequestMessage = "{ 'Username': %s, 'Password': %s }";
+        int sizeOfMessage = 0;
     
         // Print prompts after validation
         // User needs their password and username
@@ -157,19 +169,26 @@ int main(int argc, char *argv[]){
         printf("Please enter your password: \n");
         fgetsTrim(password, MAX_STRING_LENGTH, stdin);
 
-        // Send the user's credentials along with their request to the server
+        // Prepare the user's credentials along with their request to send to the server
+        sprintf(buffToServer, cpRequestMessage, acUsername,acPassword);
+        printf("\n\nConnected with %s encryption\n", SSL_get_cipher(ssl))
+        showingCertifications(ssl);
 
+        // Write message to server
+        SSL_write(ssl, buffToServer, strlen(buffToServer));
 
         // Recieve the message
-        printf("Recieved a message: \"%s\"\n", message);
-
+        sizeOfMessage = SSL_read(ssl, sizeOfMessage, sizeof(sizeOfMessage));
+        buffFromServer[sizeOfMessage] = 0;
+        printf("Recieved a message: \"%s\"\n", buffFromServer);
+        SSL_free(ssl);
+    }
 
     // Close the connection
-
+    close(server);
+    SSL_CTX_free(ctx);
     return 0;
-
 }
-
 
 // Other functions as needed
 /*
