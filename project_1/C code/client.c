@@ -18,10 +18,10 @@ after validating certificates with the given server. */
 #define MAX_STRING_LENGTH 80
 
 
-
+// Functions for the connection
 /* Function to open the connection for the client.
 Arguments: the hostname passed as a constant string and the port number as an integer
-Returns: 
+Returns: the socket file descriptor
 */
 int OpenConnection(const char *hostname, int port){
 
@@ -44,22 +44,76 @@ int OpenConnection(const char *hostname, int port){
 
     // Prepare for connection
     struct sockaddr_in addr;
-    bzero(&addr, sizeof(addr));
+    memset(&addr, 0, sizeof(addr));     // Removes padding from struct
     addr.sin_family = PF_INET;
     addr.sin_port = htons(port);
     addr.sin_addr.s_addr = *(long*)(host->h_addr);
     
 
-    // Connect!
+    // Connect and check connection
+    if (connect(socketID, (struct sockaddr *)&sockaddr_in, sizeof(sockaddr_in)) == -1){
+        perror("ERROR: CANNOT CONNECT TO SERVER");
+        abort();
+    }
 
+    // Return socket file descriptor
+    return socketID;
 
-    // Check connection
+}
 
+/* Function to show the certificate of the server
+Arguments: An SSL pointer that represents an SSL connection
+Returns: Nothing
+*/
+void showingCertifications (SSL *ssl){
 
+    // Declarations
+    char *subject;
+    char *issuer;
 
+    // Get Server's Cert
+    X509 *cert = SSL_get_peer_certificate(ssl);
 
+    // Validate and display
+    if (cert == NULL){
+        printf("There are no configured client certificates.\n");
+    }
+
+    else{
+        printf("Server certificates:\n");
+        subject = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);
+        printf("Certificate subject: %s\n", subject);
+
+        issuer = X509_NAME_oneline(X509_get_issuer_name(cert), 0, 0);
+        printf("Issued by: %s\n", issuer);
 
     }
+
+    // Free memory
+    free(subject);
+    free(issuer);
+    X509_free(cert);
+}
+
+
+/* Function to setup SSL_CTX 
+Arguments: None
+Returns: a pointer to an SSL_CTX structure containing information about the connection
+*/
+SSL_CTX* setupCTX(){
+
+    OpenSSL_add_all_algorithms();   // Gather all of the cryptos
+    SSL_load_error_strings();       // Load error strings for human readable errors
+    SSL_METHOD *method = TLSv1_2_client_method();
+    SSL_CTX *ctx = SSL_CTX_new(method);
+    
+    // Check connection
+    if (ctx == NULL){
+        ERR_print_errors_fp(stderr);
+        abort();
+    }
+    
+    return ctx;
 }
 
 
