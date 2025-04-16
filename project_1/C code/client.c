@@ -16,6 +16,7 @@ after validating certificates with the given server. */
 
 // Define
 #define MAX_STRING_LENGTH 80
+#define ERROR -1
 
 
 // Functions for the connection
@@ -47,11 +48,11 @@ int OpenConnection(const char *hostname, int port){
     memset(&addr, 0, sizeof(addr));     // Removes padding from struct
     addr.sin_family = PF_INET;
     addr.sin_port = htons(port);
-    addr.sin_addr.s_addr = *(long*)(host->h_addr);
+    addr.sin_addr.s_addr = *(long*)(host->h_addr_list[0]);
     
 
     // Connect and check connection
-    if (connect(socketID, (struct sockaddr *)&sockaddr_in, sizeof(sockaddr_in)) == -1){
+    if (connect(socketID, (struct sockaddr *)&addr, sizeof(addr)) == ERROR){
         perror("ERROR: CANNOT CONNECT TO SERVER");
         abort();
     }
@@ -130,7 +131,7 @@ int main(int argc, char *argv[]){
 
     // Check to see if the program was called with the right number of arguments.
     if (argc != 3){
-        printf("Improper usage. Expected compiledClient.exe <hostname> <portnum>");
+        printf("Improper usage. Expected compiledClient.exe <hostname> <portnum>\n\n");
         exit(0);
     }
 
@@ -148,7 +149,7 @@ int main(int argc, char *argv[]){
 
 
     // Validate SSL conection 
-    if ( SSL_connect(ssl) == FAIL ) {  
+    if ( SSL_connect(ssl) == ERROR ) {  
         ERR_print_errors_fp(stderr);
     }
 
@@ -170,8 +171,8 @@ int main(int argc, char *argv[]){
         fgetsTrim(password, MAX_STRING_LENGTH, stdin);
 
         // Prepare the user's credentials along with their request to send to the server
-        sprintf(buffToServer, cpRequestMessage, acUsername,acPassword);
-        printf("\n\nConnected with %s encryption\n", SSL_get_cipher(ssl))
+        sprintf(buffToServer, cpRequestMessage, username,password);
+        printf("\n\nConnected with %s encryption\n", SSL_get_cipher(ssl));
         showingCertifications(ssl);
 
         // Write message to server
