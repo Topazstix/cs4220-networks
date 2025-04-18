@@ -8,9 +8,13 @@ Goal is to create a client/server program which utilizes openssl to generate a T
 
 ## Server
 
+> [server source available here](./src/bin/server.rs)
+
 Our server is written and configured in rust. The server is designed to load a pre-generated (user generated) certificate for TLS authentication and communication. Once certificates are loaded via openssl, a socket stream is initiated and then configured to utilize SSL streams for client/server communications.
 
 ## Client
+
+> [client source available here](./C%20code/client.c)
 
 Our client is written and designed in C, with a few additional security mechanisms implemented to handle safely deallocating memory and closing socket connections. The client preloads the server's certificate, loads this into openssl, and uses this as the agreed upon means for generating TLS traffic with the server. Additionally, the client structures its message for the server in a JSON-*like* struct, which the server deserializes as native JSON for verification.
 
